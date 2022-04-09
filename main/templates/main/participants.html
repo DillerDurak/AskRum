@@ -1,0 +1,123 @@
+{%extends 'main/base.html'%}
+
+{%block content%}
+    <main class="layout">
+      <div class="container">
+        <div class="layout__box">
+          <div class="layout__boxHeader">
+            <div class="layout__boxTitle">
+              <a href="{%url 'home'%}">
+                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+                  <title>arrow-left</title>
+                  <path
+                    d="M13.723 2.286l-13.723 13.714 13.719 13.714 1.616-1.611-10.96-10.96h27.625v-2.286h-27.625l10.965-10.965-1.616-1.607z"
+                  ></path>
+                </svg>
+              </a>
+              <h3>Room Participants</h3>
+            </div>
+          </div>
+
+          <div class="activities-page layout__body">
+            {%for participant in page_obj%}
+            <div class="activities__box">
+              <div class="activities__boxHeader roomListRoom__header">
+                <a href="{%url 'user-profile' participant.pk %}" class="roomListRoom__author">
+                    {%if participant.is_online%}
+                     <div class="avatar avatar--small active">
+                        {%if participant.imageURL%}
+                            <img src="{{participant.imageURL}}">
+                        {%else%}
+                            <img src="https://avatars.dicebear.com/api/bottts/{{participant.username}}.svg" />
+                        {%endif%}
+                    </div>
+                    {%else%}
+                     <div class="avatar avatar--small">
+                        {%if participant.imageURL%}
+                            <img src="{{participant.imageURL}}">
+                        {%else%}
+                            <img src="https://avatars.dicebear.com/api/bottts/{{participant.username}}.svg" />
+                        {%endif%}
+                    </div>
+                    {%endif%}
+                    <p>
+                    {%if participant in moderators%}
+                        <span style="color: #ff80ff">@{{participant.username|truncatewords:4}}</span>
+                    {%elif participant == room.host%}
+                        <span style="color: #FFD700">@{{participant.username|truncatewords:4}}</span>
+                    {%else%}
+                        <span style="color: var(--color-main)">@{{participant.username|truncatewords:4}}</span>
+                    {%endif%}
+                  </p>
+                </a>
+                <div>
+                {%if participant == room.host%}
+                    <div class="participant_crown" style="margin: 0 -10px 0 0;">
+                        <?xml version='1.0' encoding='iso-8859-1'?>
+                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 232.211 232.211" xmlns:xlink="http://www.w3.org/1999/xlink" enable-background="new 0 0 232.211 232.211">
+                          <g>
+                            <path d="M218.006,180.449l14.205-134.226L166.438,68.03L115.598,3.56L64.79,67.989L0,46.174l13.074,134.275H218.006z    M75.255,103.169l40.343-51.16l40.311,51.119l41.572-13.783l-6.467,61.104H40.295L34.35,89.395L75.255,103.169z"/>
+                            <rect width="207.825" x="11.853" y="198.651" height="30"/>
+                          </g>
+                        </svg>
+                    </div>
+               {%endif%}
+               </div>
+               {%if request.user == room.host and p != room.host%}
+               <a href="{%url 'room-action' room.id participant.pk%}">
+                   <div class="participant_action">
+                        <svg id="Flat" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+                          <path d="M128,26A102,102,0,1,0,230,128,102.1153,102.1153,0,0,0,128,26Zm0,192a90,90,0,1,1,90-90A90.10217,90.10217,0,0,1,128,218Zm10-90a10,10,0,1,1-10-10A10.01146,10.01146,0,0,1,138,128Zm48,0a10,10,0,1,1-10-10A10.01177,10.01177,0,0,1,186,128Zm-96,0a10,10,0,1,1-10-10A10.01146,10.01146,0,0,1,90,128Z"/>
+                        </svg>
+                    </div>
+                </a>
+               {%endif%}
+              </div>
+            </div>
+            {%endfor%}
+          </div>
+
+          {%if page_obj.has_other_pages%}
+            <nav class="pagination-outer" aria-label="Page navigation">
+            <ul class="pagination">
+            {%if page_obj.has_previous%}
+                <li class="page-item">
+                    <a href="?page={{page_obj.previous_page_number}}" class="page-link" aria-label="Previous">
+                        <span aria-hidden="true">«</span>
+                    </a>
+                </li>
+            {%endif%}
+
+            {%for p in  page_obj.paginator.page_range%}
+
+                {%if p == page_obj.number%}
+                    <li class="page-item active">
+                        <a class="page-link">{{p}}</a>
+                    </li>
+                {%elif p >= page_obj.number|add:-1 and p <= page_obj.number|add:1%}
+
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{p}}">{{p}}</a>
+                    </li>
+
+                {%endif%}
+            {%endfor%}
+
+
+            {%if page_obj.has_next%}
+                <li class="page-item">
+                    <a href="?page={{page_obj.next_page_number}}" class="page-link" aria-label="Next">
+                        <span aria-hidden="true">»</span>
+                    </a>
+                </li>
+            {%endif%}
+            </ul>
+        </nav>
+        {%endif%}
+        <br>
+
+          </div>
+        </div>
+      </div>
+    </main>
+{%endblock%}

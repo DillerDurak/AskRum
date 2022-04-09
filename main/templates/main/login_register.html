@@ -1,0 +1,86 @@
+{%extends 'main/base.html'%}
+{%load static%}
+{%load static recaptcha3%}
+
+{%block content%}
+    <main class="auth layout">
+    {%if request.path == "/login/" %}
+        <div class="container">
+        <div class="layout__box">
+          <div class="layout__boxHeader">
+            <div class="layout__boxTitle">
+              <h3>Login</h3>
+            </div>
+          </div>
+          <div class="layout__body">
+            <h2 class="auth__tagline">Find your study partner</h2>
+            {{ form.non_field_errors }}
+            <br>
+            <form class="form" method="post">
+              {%csrf_token%}
+              {%for field in form%}
+                <div class="form__group form__group">
+                  <label>{{field.label}}</label>
+                  {{field}}
+                </div>
+              {%endfor%}
+
+              <button class="btn btn--main" type="submit">
+                <img src="{%static 'images/lock.svg'%}" style="width: 20px;">
+
+                Login
+              </button>
+            </form>
+
+            <div class="auth__action">
+              <p>Haven't signed up yet?</p>
+              <a href="{%url 'registration'%}" class="btn btn--link">Sign Up</a>
+              <p>Forgot password?</p>
+              <a href="{%url 'reset_password'%}" class="btn btn--link">Reset</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {%else%}
+        <div class="container">
+        <div class="layout__box">
+          <div class="layout__boxHeader">
+            <div class="layout__boxTitle">
+              <h3>Sign up</h3>
+            </div>
+          </div>
+          <div class="layout__body">
+            <h2 class="auth__tagline">Find your study partner</h2>
+
+            <form class="form" method="post">
+              {%csrf_token%}
+
+              {%for field in form%}
+                <div class="form__group form__group">
+                  {{field.errors}}
+                  <label>{{field.label}}</label>
+                  {{field}}
+                  {%if field.name == 'email'%}
+                    <p style="font-size: 1.3rem;">{{field.help_text}}<p>
+                  {%endif%}
+                </div>
+              {%endfor%}
+                {%recaptcha_init%}
+                {%recaptcha_ready action_name="home"%}
+              <button class="btn btn--main" type="submit">
+                <img src="{%static 'images/lock.svg'%}" style="width: 20px;">
+
+                Sign Up
+              </button>
+            </form>
+
+            <div class="auth__action">
+              <p>Already have an account?</p>
+              <a href="{%url 'login'%}" class="btn btn--link">Log In</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {%endif%}
+    </main>
+{%endblock%}
