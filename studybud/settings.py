@@ -27,7 +27,7 @@ environ.Env.read_env()
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env.str('KEY')
+SECRET_KEY = 'django-insecure-r9en_o(er8&-)(0y-=i4&rxt^6%5+ks*$-o6ztakh#a#_55v8@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -89,7 +89,15 @@ WSGI_APPLICATION = 'studybud.wsgi.application'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
-    'default': env.db('DATABASE_URL'),
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'dbkljaau9eeeof',
+        'USER': 'guhsokiyqxysza',
+        'PASSWORD': 'd6e23998528a63979bcf7b22b5705e2d00223f74917c6b3913a59a94eedbb5ad',
+        'HOST': 'ec2-52-30-67-143.eu-west-1.compute.amazonaws.com',
+        'PORT': '5432',
+
+    },
 
     'extra': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -175,8 +183,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = env.str('HOST_USER')
-EMAIL_HOST_PASSWORD = env.str('HOST_PASSWORD')
+EMAIL_HOST_USER = 'studybuddy1337@gmail.com'
+EMAIL_HOST_PASSWORD = 'qwerty2281337+'
 
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
