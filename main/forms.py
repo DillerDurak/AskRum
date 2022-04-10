@@ -8,6 +8,7 @@ from snowpenguin.django.recaptcha3.fields import ReCaptchaHiddenInput
 class MyUserCreationForm(UserCreationForm):
     captcha = ReCaptchaHiddenInput()
     email = forms.EmailField(help_text='You should enter your own email. If you forgot your password, you would change it through your email.')
+    username = forms.CharField(max_length=16, label='Username (maximum 16 symbols)')
 
     class Meta:
         model = User
