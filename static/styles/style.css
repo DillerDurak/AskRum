@@ -464,6 +464,47 @@ a {
   overflow: hidden;
 }
 
+.modal-container{
+    background-color: rgba(0,0,0,0.4);
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    position: fixed;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    top: 0;
+    left: 0;
+}
+
+.modal-content{
+    text-align: center;
+    padding: 30px 50px;
+    background-color: #fff;
+    width: 600px;
+    max-width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0,4);
+}
+
+.modal_container.show{
+    pointer-events: auto;
+    opacity: 1;
+}
+
+#close-btn{
+    text-align: right;
+    margin: 0;
+    font-size: 30px;
+    font-weight: bold;
+    background: none;
+    border: none;
+    color: rgb(201, 21, 21);
+    cursor: pointer;
+}
+
 .layout__boxHeader {
   display: flex;
   padding: 1.5rem;

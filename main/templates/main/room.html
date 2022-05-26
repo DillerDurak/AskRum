@@ -1,4 +1,4 @@
- {%extends 'main/base.html'%}
+{%extends 'main/base.html'%}
 
 {%block content%}
     <main class="profile-page layout layout--2">
@@ -235,5 +235,80 @@
         </div>
         <!--  End -->
       </div>
+      <div class="modal-container" id="modal">
+            <div class="modal-content">
+                <div class="layout__boxHeader">
+                    <div class="layout__boxTitle">
+                        <p id="close-btn">
+                            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32"
+                                viewBox="0 0 32 32">
+                                <title>arrow-left</title>
+                                <path
+                                    d="M13.723 2.286l-13.723 13.714 13.719 13.714 1.616-1.611-10.96-10.96h27.625v-2.286h-27.625l10.965-10.965-1.616-1.607z">
+                                </path>
+                            </svg>
+                        </p>
+                        <h3>Back</h3>
+                    </div>
+                </div>
+                <div class="layout__body" style="text-align: center">
+
+                    {%if obj.is_online%}
+                     <div class="avatar avatar--large active">
+                        {%if obj.imageURL%}
+                            <img src="{{obj.imageURL}}">
+                        {%else%}
+                            <img src="https://avatars.dicebear.com/api/bottts/{{obj.username}}.svg" />
+                        {%endif%}
+                    </div>
+                    {%else%}
+                     <div class="avatar avatar--large">
+                        {%if obj.imageURL%}
+                            <img src="{{obj.imageURL}}">
+                        {%else%}
+                            <img src="https://avatars.dicebear.com/api/bottts/{{obj.username}}.svg" />
+                        {%endif%}
+                    </div>
+                    {%endif%}
+                    <h2 class="auth__tagline">@{{obj}}</h2>
+
+                    <div class="grid">
+
+                        {%if obj in moderators%}
+                            <form class="form" action="" method="post">
+                                {%csrf_token%}
+
+                                    <div class="for__group">
+                                        <input class="btn btn-warning" type="submit" name="demote" value="Demote" />
+                                        <p>Demote user to common participant in current room.</p>
+                                    </div>
+
+                            </form>
+                        {%else%}
+                            <form class="form" action="" method="post">
+                                {%csrf_token%}
+
+                                    <div class="for__group">
+                                        <input class="btn btn-success" type="submit" name="promote" value="Promote" />
+                                        <p>Promote user to moderator in current room.</p>
+                                    </div>
+
+                            </form>
+                        {%endif%}
+
+                         <form class="form" action="" method="post">
+                                {%csrf_token%}
+
+                                <div class="for__group">
+                                    <input class="btn btn-danger" type="submit" name="delete" value="Delete" />
+                                    <p>Delete user from the room.</p>
+                                </div>
+                        </form>
+
+                    </div>
+
+                </div>
+              </div>
+            </div>
     </main>
 {%endblock%}

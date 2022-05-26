@@ -30,9 +30,9 @@ environ.Env.read_env()
 SECRET_KEY = 'r9en_o(er8&-)(0y34fhgfj=i4&rxt^6%5+dhdfh65h5ks*$-o6ztakh#a#_55shv57urjgfhjf8@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'askrum.herokuapp.com']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -89,7 +89,7 @@ WSGI_APPLICATION = 'studybud.wsgi.application'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+    'extra': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'dbkljaau9eeeof',
         'USER': 'guhsokiyqxysza',
@@ -99,7 +99,7 @@ DATABASES = {
 
     },
 
-    'extra': {
+    'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
@@ -144,7 +144,7 @@ USE_TZ = True
 # STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = "/static/"
-# STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 django_heroku.settings(locals())
 
 
