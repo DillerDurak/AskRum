@@ -36,15 +36,15 @@
                   <a href="{%url 'home'%}" class="active">All <span>{{room_count}}</span></a>
                 </li>
                 {%for t in page_obj%}
-                    {%if t.room_set.all.count > 0%}
+                    {%if t.room_count > 0%}
                       <li>
-                        <a href="{%url 'home'%}?q={{t.name}}">{{t.name}}<span>{{t.room_set.all.count}}</span></a>
+                        <a href="{%url 'home'%}?q={{t.name}}">{{t.name}}<span>{{t.room_count}}</span></a>
                       </li>
                     {%endif%}
                 {%endfor%}
             </ul>
 
-                      {%if page_obj.has_other_pages%}
+            {%if page_obj.has_other_pages%}
             <nav class="pagination-outer" aria-label="Page navigation">
             <ul class="pagination">
             {%if page_obj.has_previous%}

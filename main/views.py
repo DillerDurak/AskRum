@@ -2,13 +2,14 @@ from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
-from django.http import HttpResponse, HttpRequest, HttpResponseNotFound, HttpResponseForbidden
+from django.http import HttpResponse, HttpRequest, HttpResponseNotFound, HttpResponseForbidden, HttpResponseServerError
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from django.db.models import Q
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.db.models import Count
 
 from .models import *
 from .forms import *
@@ -17,23 +18,23 @@ from .forms import *
 def home(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''
 
-    rooms = Room.objects.filter(Q(topic__name__icontains=q) |
+    rooms = Room.objects.select_related('topic', 'host').filter(Q(topic__name__icontains=q) |
                                 Q(name__icontains=q) |
                                 Q(host__username__icontains=q) |
-                                Q(description__icontains=q))
+                                Q(description__icontains=q)).prefetch_related('participants')
 
-    topics = Topic.objects.all()[:5]
     room_all = Room.objects.all().count()
-    room_count = rooms.count()
-    room_messages = Message.objects.filter(Q(room__topic__name__icontains=q))
+    topics = Topic.objects.all()[:5].values('name', room_count=Count('room'))
+    # topics = Topic.objects.all()[:5].values('name').annotate(room_count=Count('room'))
+    room_messages = Message.objects.select_related('user', 'room').filter(room__topic__name__icontains=q).order_by('-created')[:6]
 
     paginator = Paginator(rooms, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
     context = {'title': 'Главная страница',
-               'rooms':rooms, 'topics': topics,
-               'room_count': room_count, 'room_messages':room_messages[:6],
+               'topics': topics, 
+               'room_messages':room_messages,
                'room_all': room_all,
                 'page_obj': page_obj, }
 
@@ -41,10 +42,7 @@ def home(request):
 
 
 def room(request, pk):
-    room = Room.objects.get(pk=pk)
-    messages_list = room.message_set.all().order_by('-created')
-    participants = room.participants.all()
-    moderators = room.moderator.all()
+    room = Room.objects.select_related('host', 'topic').prefetch_related('moderator', 'participants').get(pk=pk)
 
     if request.method == 'POST':
         if request.user.is_authenticated:
@@ -61,7 +59,7 @@ def room(request, pk):
             messages.error(request, 'At first, you need to be logged in to write messages!')
             return redirect('login')
 
-    context = {'title': 'Room страница', 'room': room, 'messages_list': messages_list, 'participants': participants, 'moderators': moderators}
+    context = {'title': 'Room страница', 'room': room}
     return render(request, 'main/room.html', context)
 
 
@@ -207,10 +205,9 @@ def logout_user(request):
 
 @login_required(login_url='login')
 def updateRoom(request, pk):
-    room = Room.objects.get(pk=pk)
+    room = Room.objects.select_related('topic', 'host').get(pk=pk)
     form = RoomCreationForm(instance=room)
     topics = Topic.objects.all()
-    path = "/update-room/"+pk+"/"
 
     if request.user != room.host:
         return HttpResponse('You are not allowed here!!')
@@ -227,13 +224,13 @@ def updateRoom(request, pk):
 
             return redirect('room', pk=pk)
 
-    context = {'title': 'Updating room', 'form': form, 'topics':topics, 'room': room, 'path': path,}
+    context = {'title': 'Updating room', 'form': form, 'topics':topics, 'room': room}
     return render(request, 'main/room_form.html', context)
 
 
 @login_required(login_url='login')
 def deleteRoom(request, pk):
-    room = Room.objects.get(pk=pk)
+    room = Room.objects.select_related('host').get(pk=pk)
 
     if request.user != room.host:
         return HttpResponse('You are not allowed here!!')
@@ -321,7 +318,8 @@ def userAction(request, id, pk):
 def topicsPage(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''
 
-    topics = Topic.objects.filter(name__icontains=q).order_by("id")
+    topics = Topic.objects.filter(name__icontains=q).values('name', room_count=Count('room')).order_by("id")
+    # topics = Topic.objects.filter(name__icontains=q).order_by("id")
     room_count = Room.objects.all().count()
 
     paginator = Paginator(topics, 8)
@@ -334,7 +332,7 @@ def topicsPage(request):
 
 def activityPage(request):
     topics = Topic.objects.all()
-    room_messages = Message.objects.all().order_by('-created')
+    room_messages = Message.objects.all().select_related('user', 'room').order_by('-created')
 
     paginator = Paginator(room_messages, 5)
     page_number = request.GET.get('page')
@@ -358,8 +356,12 @@ def participantsPage(request, id):
 
 
 def pageNotFound(response,exception):
-    return render(response, "<h1>Страница не была найдена. Попробуйте другой адрес!</h1>")
+    return HttpResponseNotFound("<h1>Страница не была найдена. Попробуйте другой адрес!</h1>")
 
 
 def pageForbidden(response,exception):
     return HttpResponseForbidden("<h1>Ошибка доступа. Ошибка 403!</h1>")
+
+
+def pageServerError(response):
+    return HttpResponseServerError("<h1>Технические неполадки.</h1>")

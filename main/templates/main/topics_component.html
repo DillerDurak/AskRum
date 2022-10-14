@@ -2,15 +2,15 @@
           <div class="topics__header">
             <h2>Browse Topics</h2>
           </div>
-            <a href="{%url 'home'%}?q={{t.name}}">{{t.name}}</a>
+          
               <ul class="topics__list">
                 <li>
                   <a href="{%url 'home'%}">All <span>{{room_all}}</span></a>
                 </li>
                   {%for t in topics%}
-                      {%if t.room_set.all.count > 0%}
+                      {%if t.room_count > 0%}
                             <li>
-                              <a href="{%url 'home'%}?q={{t.name}}">{{t.name}}<span>{{t.room_set.all.count}}</span></a>
+                              <a href="{%url 'home'%}?q={{t.name}}">{{t.name}}<span>{{t.room_count}}</span></a>
                             </li>
                       {%endif%}
                   {%endfor%}
@@ -27,14 +27,3 @@
 
 
 
-
-<!--<h3>Browse Topics</h3>-->
-<!--<hr>-->
-<!--    <div>-->
-<!--        <a href="{%url 'home'%}">All</a>-->
-<!--    </div>-->
-<!--{%for t in topics%}-->
-<!--    <div>-->
-<!--        <a href="{%url 'home'%}?q={{t.name}}">{{t.name}}</a>-->
-<!--    </div>-->
-<!--{%endfor%}-->
