@@ -67,7 +67,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'askrum.urls'
+ROOT_URLCONF = 'studybud.urls'
 
 TEMPLATES = [
     {
@@ -85,7 +85,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'askrum.wsgi.application'
+WSGI_APPLICATION = 'studybud.wsgi.application'
 
 
 # Database

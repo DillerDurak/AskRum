@@ -1,1 +1,1 @@
-web: gunicorn askrum.wsgi
+web: gunicorn studybud.wsgi
