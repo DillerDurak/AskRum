@@ -3,7 +3,7 @@ askrum/.env
 *.pot
 *.pyc
 __pycache__
-./db.sqlite3
-./media
-./Procfile
-.runtime.txt
+*.sqlite3
+media
+Procfile
+runtime.txt
