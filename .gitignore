@@ -4,6 +4,5 @@ askrum/.env
 *.pyc
 __pycache__
 *.sqlite3
-media
+media/
 Procfile
-runtime.txt
