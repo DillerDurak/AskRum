@@ -1,10 +1,9 @@
-studybud/.env
+askrum/.env
 *.log
 *.pot
 *.pyc
 __pycache__
-db.sqlite3
-media
-studybud/.env
-Procfile
-runtime.txt
+.db.sqlite3
+.media
+.Procfile
+.runtime.txt
