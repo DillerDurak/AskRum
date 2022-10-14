@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django import forms
 from .models import *
-from snowpenguin.django.recaptcha3.fields import ReCaptchaHiddenInput
+from snowpenguin.django.recaptcha3.widgets import ReCaptchaHiddenInput
 # from captcha.fields import CaptchaField
 
 
