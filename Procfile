@@ -1,2 +1,2 @@
 release: python manage.py migrate
-web: gunicorn studybud.wsgi --log-file=-
+web: gunicorn askrum.wsgi --log-file=-
