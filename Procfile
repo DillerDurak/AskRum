@@ -1,2 +1,1 @@
-release: python manage.py migrate
-web: gunicorn askrum.wsgi --log-file=-
+web: gunicorn askrum.wsgi
