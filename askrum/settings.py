@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 import os
 from pathlib import Path
 import environ
+import django_heroku
 
 env = environ.Env()
 # reading .env file
@@ -200,3 +201,5 @@ DEBUG_TOOLBAR_CONFIG = {
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DISABLE_COLLECTSTATIC=1
+
+django_heroku.settings(locals())
